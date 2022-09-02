@@ -1,7 +1,7 @@
 package bot
 
 import (
-	"fmt"
+	"github.com/alekseyklimenko/go-tglist-bot/controllers"
 	"github.com/alekseyklimenko/go-tglist-bot/logger"
 	tele "gopkg.in/telebot.v3"
 	"log"
@@ -24,18 +24,12 @@ func NewService( /*conf *config.Config*/ ) *Service {
 		log.Fatal(err)
 		return nil
 	}
-
-	b.Handle("/hello", func(c tele.Context) error {
-		chatId := c.Chat().ID
-		name := c.Chat().FirstName
-		return c.Send(fmt.Sprintf("Hello, %s! Your chat id:%d", name, chatId))
-	})
+	controllers.RegisterHandlers(b)
 
 	go func() {
 		logger.NewEntry().Info("Starting Bot")
 		b.Start()
 	}()
-
 	return &Service{
 		bot: b,
 	}
